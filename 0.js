@@ -12,7 +12,7 @@ var things = [
 	{name:"外征",good:"掉了好多粉红色的东西",bad:"怎么队友是8个cpu"},
 	{name:"团队战",good:"PPPPPPPPP V P",bad:"P V PPPPPPPPP"},
 	{name:"摸鱼",good:"辣鸡游戏，毁我青春",bad:"你已被移出工会"},
-	{name:"爆肝",good:"氪佬在肝帝面前只是渣渣",bad:"服务站怎么又炸了"},
+	{name:"爆肝",good:"氪佬在肝帝面前只是渣渣",bad:"服务器怎么又炸了"},
 	{name:"氪金",good:"今天的你又变强了",bad:"余额不足"},
 	{name:"推图",good:"全是稀有掉落",bad:"你auto又猝死了"},
 	{name:"手操Hard",good:"一遍过",bad:"打完就掉线"},
@@ -32,20 +32,31 @@ var lilys = [
 	"一柳梨璃","白井梦结","枫·J·努韦尔","二川二水","安藤鹤纱","吉村·Thi·梅","郭神琳","王雨嘉","米莉亚姆"
 ];
 //=========随机内容end=========
-
+function str_to_ascii(str){
+	let ascii = "";
+	for(let n = 0;n<(str.length>9?8:str.length);n++){
+		ascii += str.charAt(n).charCodeAt();
+   }
+   return ascii;
+}
 /****************
 *以当天日期为seed伪随机
 *seed必须为全局变量
 *区间[min,max)
-/****************/
+**********************************
+****建议修改r_name为随机字符串****
+**********************************
+*****************/
+var r_name = "assaultlilycn";
 var today = new Date();
 var seed = Number(""+today.getFullYear()+today.getMonth()+today.getDate());
+seed += str_to_ascii(r_name);
 function seededRandom(max,min) { 
     max = max || 1;
     min = min || 0; 
     seed = (seed * 9301 + 49297) % 233280; 
     let rnd = seed / 233280.0;
-	//console.log(rnd);
+	//console.log(str_to_ascii(r_name));
     return parseInt(min + rnd * (max - min)); 
 };
 function add_to_good_or_bad(target,content){
@@ -67,8 +78,8 @@ function kira_kira(num){
 }
 function lucky_or_unfortunately(){
 	//挑选词条
-	//宜1-4个，忌1-3个
-	lucky_count = seededRandom(5,1);
+	//宜2-4个，忌1-3个
+	lucky_count = seededRandom(5,2);
 	unfortunately_count = seededRandom(4,1);
 	for(let i = 0;i<lucky_count;i++){
 		let temp = seededRandom(things.length,0);
@@ -86,7 +97,7 @@ $(document).ready(function(){
 	lucky_or_unfortunately();
 	var weeks = ["日","一","二","三","四","五","六"];
 	add_to_tips(".date",today.getFullYear() + "年" + (today.getMonth() + 1) + "月" + today.getDate() + "日 | 星期" + weeks[today.getDay()]);
-	add_to_tips(".lucky_star",kira_kira(seededRandom(5,1)));
 	add_to_tips(".lucky_lily",lilys[seededRandom(lilys.length,0)]);
+	add_to_tips(".lucky_star",kira_kira(seededRandom(5,1)));
 	add_to_tips(".direction_gacha",directions[seededRandom(directions.length,0)]);
 });
